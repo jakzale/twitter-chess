@@ -84,10 +84,12 @@ var valid_moves = {
 }
 
 function get_valid_moves(board, x, y) {
+    var moves = [];
     var figure = board[x][y].slice(1);
+    if (!figure) return moves;
+
     var y_mult = board[x][y][0] === "w" ? 1 : -1;
 
-    var moves = [];
     for (i in _.range(valid_moves[figure].max_mult)) {
         i += 1;
 
