@@ -17,7 +17,7 @@ var app = feathers();
 app.use(feathers.static(__dirname + '/public'));
 
 // Use socket io
-app.configure(feathers.socketio());
+app.configure(feathers.primus({ transformer: 'sockjs' }));
 
 // Use the todoService
 app.use('/game', move_service);

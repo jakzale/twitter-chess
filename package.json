@@ -30,7 +30,9 @@
     "mongoose": "~3.8.6",
     "socket.io": "~0.9.16",
     "msgpack": "~0.2.1",
-    "hiredis": "~0.1.16"
+    "hiredis": "~0.1.16",
+    "sockjs": "~0.3.8",
+    "primus": "~2.0.0"
   },
   "devDependencies": {
     "grunt": "~0.4.2",
@@ -38,6 +40,7 @@
     "grunt-nodemon": "~0.2.0",
     "grunt-contrib-watch": "~0.5.3",
     "grunt-browserify": "~2.0.0",
-    "grunt-concurrent": "~0.4.3"
+    "grunt-concurrent": "~0.4.3",
+    "socket.io-client": "~0.9.16"
   }
 }
