@@ -3,29 +3,23 @@ var mongoose = require('mongoose');
 
 var log = console.log;
 
-var move_service = {
-    moves: [],
-
-    find: function(params, callback) {
-        'use strict';
-        callback(null, this.moves);
-    },
-
-    create: function(data, params, callback) {
-        'use strict';
-
-        log('adding', data, params);
-        data.id = this.todos.length;
-        this.moves.push(data);
-        callback(null, data);
-    }
-};
-
 // Connect to the database
-var db = mongoose.connect('mongodb://localhost/chess');
+// TODO: Verify if it is supposed to be like this
+var environment = process.env.NODE_ENV;
+
+var db;
+if (environment === 'test') {
+    db = mongoose.connect('mongodb://localhost/chess-test');
+}
+else {
+    db = mongoose.connect('mongodb://localhost/chess');
+}
 
 // Loading the models manually :P
 require(__dirname + '/app/models');
+
+// Loading services
+var move_service = require(__dirname + '/app/service');
 
 var app = feathers();
 

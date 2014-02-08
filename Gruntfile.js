@@ -68,7 +68,8 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-browserify');
     grunt.loadNpmTasks('grunt-mocha-test');
+    grunt.loadNpmTasks('grunt-env');
 
     grunt.registerTask('default', ['browserify', 'concurrent']);
-    grunt.registerTask('test', 'mochaTest');
+    grunt.registerTask('test', ['env:test', 'mochaTest']);
 };
