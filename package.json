@@ -25,6 +25,7 @@
     "feathers": "~0.3.0"
   },
   "devDependencies": {
-    "grunt": "~0.4.2"
+    "grunt": "~0.4.2",
+    "nodemon": "~1.0.14"
   }
 }
