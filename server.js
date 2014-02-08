@@ -1,5 +1,4 @@
 var feathers = require('feathers');
-var http = require('http');
 
 var move_service = {
     find: function(params, callback) {
@@ -21,7 +20,7 @@ app.use(feathers.static(__dirname + '/public'));
 app.configure(feathers.socketio());
 
 // Use the todoService
-app.use('/todo', todoService);
+app.use('/game', move_service);
 
 // Start listening on port
 app.listen(8000);
