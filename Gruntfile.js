@@ -55,6 +55,11 @@ module.exports = function(grunt) {
                 },
                 src: ['test/mocha/**/*.js']
             }
+        },
+        env: {
+            test: {
+                NODE_ENV: 'test'
+            }
         }
     });
 
