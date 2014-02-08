@@ -1,0 +1,24 @@
+{
+  "name": "twitter-chess",
+  "version": "0.0.0",
+  "homepage": "https://github.com/jakzale/twitter-chess",
+  "authors": [
+    "Jakub Z <jakzale@gmail.com>"
+  ],
+  "description": "Play Chess with Twitter",
+  "main": "server.js",
+  "keywords": [
+    "twitter",
+    "chess"
+  ],
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "public/lib",
+    "test",
+    "tests"
+  ]
+}
