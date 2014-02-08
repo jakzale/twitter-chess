@@ -1,19 +1,19 @@
 var mongoose = require('mongoose');
-var Move = mongoose.Schema('Move');
+var Move = mongoose.model('Move');
 
 module.exports = {
 
     find: function(params, callback) {
         'use strict';
 
-        //Move.find({}, function(err, moves) {
-            //if (err) {
-                //callback(err, null);
-            //}
-            //else {
-                //callback(null, moves);
-            //}
-        //});
+        Move.find({}, function(err, moves) {
+            if (err) {
+                callback(err, null);
+            }
+            else {
+                callback(null, moves);
+            }
+        });
     },
 
     create: function(data, params, callback) {
