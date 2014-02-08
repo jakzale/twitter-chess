@@ -1,12 +1,21 @@
 var feathers = require('feathers');
 
+var log = console.log;
+
 var move_service = {
+    moves: [],
+
     find: function(params, callback) {
-        callback(null, "heyo");
+        'use strict';
+        callback(null, this.moves);
     },
 
     create: function(data, params, callback) {
-        console.log('adding', data);
+        'use strict';
+
+        log('adding', data, params);
+        data.id = this.todos.length;
+        this.moves.push(data);
         callback(null, data);
     }
 };
