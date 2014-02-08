@@ -2,7 +2,6 @@ var fs = require('fs');
 
 module.exports = function(grunt) {
     'use strict';
-    // Simple gruntfile
 
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
