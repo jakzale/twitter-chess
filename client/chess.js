@@ -63,7 +63,7 @@ var valid_moves = {
         moves: [[0, 1], [1, 0], [0, -1], [-1, 0]],
         max_mult: 8
     },
-    k: {
+    n: {
         moves: [[1, 2], [-1, 2], [2, 1], [2, -1],
             [1, -2], [-1, -2], [-2, 1], [-2, -1]],
         max_mult: 1
@@ -89,7 +89,7 @@ function get_valid_moves(board, x, y) {
     function find_moves(possible_moves, push_to, attack) {
         _.each(possible_moves, function(move) {
             for (var iter in _.range(valid_moves[figure].max_mult)) {
-                var i = iter + 1;
+                var i = parseInt(iter) + 1;
                 var new_x = move[0] * i + x,
                     new_y = move[1] * i * y_mult + y;
 

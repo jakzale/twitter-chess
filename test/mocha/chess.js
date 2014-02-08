@@ -7,12 +7,12 @@ describe('Chess tests', function() {
 
     var start_board = [
         ['wr', 'wp', '', '', '', '', 'bp', 'br'],
-        ['wk', 'wp', '', '', '', '', 'bp', 'bk'],
+        ['wn', 'wp', '', '', '', '', 'bp', 'bn'],
         ['wb', 'wp', '', '', '', '', 'bp', 'bb'],
         ['wq', 'wp', '', '', '', '', 'bp', 'bq'],
         ['wk', 'wp', '', '', '', '', 'bp', 'bk'],
         ['wb', 'wp', '', '', '', '', 'bp', 'bb'],
-        ['wk', 'wp', '', '', '', '', 'bp', 'bk'],
+        ['wn', 'wp', '', '', '', '', 'bp', 'bn'],
         ['wr', 'wp', '', '', '', '', 'bp', 'br']
     ];
 
@@ -34,6 +34,17 @@ describe('Chess tests', function() {
                     }
 
                     moves.attacks.should.have.length(0);
+                });
+            });
+        });
+
+        it('should work for for the back figures', function() {
+            _.each([0, 7], function(y) {
+                _.each(_.range(8), function(x) {
+                    if (x == 1 || x == 6) return;
+
+                    var moves = chess.get_valid_moves(start_board, x, y);
+                    moves.moves.should.have.length(0);
                 });
             });
         });
