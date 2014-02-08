@@ -1,8 +1,4 @@
-module.exports = {
-    update_trees: update_trees,
-    get_valid_moves: get_valid_moves
-}
-
+var _ = require('underscore');
 
 function update_trees(moves, trees) {
     // tree: { index_cache: {}, tree: []}
@@ -84,28 +80,41 @@ var valid_moves = {
 }
 
 function get_valid_moves(board, x, y) {
-    var moves = [];
+    var valid = {moves: [], attacks: []};
     var figure = board[x][y].slice(1);
-    if (!figure) return moves;
+    if (!figure) return valid;
 
     var y_mult = board[x][y][0] === "w" ? 1 : -1;
 
-    for (i in _.range(valid_moves[figure].max_mult)) {
-        i += 1;
+    function find_moves(possible_moves, push_to, attack) {
+        _.each(possible_moves, function(move) {
+            for (var iter in _.range(valid_moves[figure].max_mult)) {
+                var i = iter + 1;
+                var new_x = move[0] * i + x,
+                    new_y = move[1] * i * y_mult + y;
 
-        _.each(valid_moves[figure].moves, function(move) {
-            var new_x = move[0] * i + x,
-                new_y = move[1] * i * y_mult + y;
+                if (new_x < 8 && new_x > -1 && new_y > -1 && new_y < 8 &&
+                    board[x][y][0] !== board[new_x][new_y][0]) {
+                    if (board[new_x][new_y][0] === undefined) {
+                        if (!attack) push_to.push([new_x, new_y]);
+                    } else {
+                        valid.attacks.push([new_x, new_y]);
+                    }
+                } else break;
 
-            if (new_x < 8 && new_x > -1 && new_y > -1 && new_y < 8 &&
-                board[x][y][0] !== board[new_x][new_y][0]) {
-                moves.push([new_x, new_y]);
             }
         });
     }
 
-    return moves;
+    find_moves(valid_moves[figure].moves, valid.moves, false);
+    find_moves(valid_moves[figure].attack, valid.attacks, true);
+
+    return valid;
 }
 
 
+module.exports = {
+    update_trees: update_trees,
+    get_valid_moves: get_valid_moves
+}
 
