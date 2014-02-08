@@ -106,8 +106,13 @@ function get_valid_moves(board, x, y) {
         });
     }
 
+    // Check where the figure can move
     find_moves(valid_moves[figure].moves, valid.moves, false);
-    find_moves(valid_moves[figure].attack, valid.attacks, true);
+
+    // If the figure has distinct attack patterns
+    if (_.contains(_.keys(valid_moves[figure]), 'attack')) {
+        find_moves(valid_moves[figure].attack, valid.attacks, true);
+    }
 
     return valid;
 }
