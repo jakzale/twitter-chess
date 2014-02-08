@@ -1,4 +1,5 @@
 var feathers = require('feathers');
+var mongoose = require('mongoose');
 
 var log = console.log;
 
@@ -19,6 +20,12 @@ var move_service = {
         callback(null, data);
     }
 };
+
+// Connect to the database
+var db = mongoose.connect('mongodb://localhost/chess');
+
+// Loading the models manually :P
+require(__dirname + '/app/models');
 
 var app = feathers();
 
