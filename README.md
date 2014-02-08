@@ -1,4 +1,4 @@
 twitter-chess
 =============
 
-Play Chess using Twitter
+Play Chess using Twitter. For profit and epic lulz.
