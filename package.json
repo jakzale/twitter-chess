@@ -1,0 +1,24 @@
+{
+  "name": "twitter-chess",
+  "version": "0.0.0",
+  "description": "Play Chess with Twitter",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/jakzale/twitter-chess.git"
+  },
+  "keywords": [
+    "twitter",
+    "chess"
+  ],
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/jakzale/twitter-chess/issues"
+  },
+  "homepage": "https://github.com/jakzale/twitter-chess",
+  "private": true
+}
