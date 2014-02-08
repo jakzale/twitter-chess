@@ -1,13 +1,14 @@
 var feathers = require('feathers');
+var http = require('http');
 
-var todoService = {
-    get: function(name, params, callback) {
-        'use strict';
+var move_service = {
+    find: function(params, callback) {
+        callback(null, "heyo");
+    },
 
-        callback(null, {
-            id: name,
-            description: "You have to do " + name + "!"
-        });
+    create: function(data, params, callback) {
+        console.log('adding', data);
+        callback(null, data);
     }
 };
 
@@ -26,3 +27,5 @@ app.use('/todo', todoService);
 app.listen(8000);
 
 console.log('Server running on 8000');
+
+
