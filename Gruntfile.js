@@ -4,6 +4,16 @@ module.exports = function(grunt) {
 
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
+
+        concurrent: {
+            dev: {
+                tasks: ['nodemon', 'watch'],
+                options: {
+                    logConcurrentOutput: true
+                }
+            }
+        },
+
         nodemon: {
             dev: {
                 script: 'server.js',
@@ -18,10 +28,29 @@ module.exports = function(grunt) {
                 ignore: ['node_modules/**'],
                 ext: 'js'
             }
+        },
+
+        watch : {
+            scripts : {
+                files: ['client/*.js'],
+                tasks: ['browserify']
+            }
+        },
+
+        browserify : {
+            dist : {
+                files : {
+                    'public/bundle.js' : ['client/*.js']
+                }
+            }
         }
+
     });
 
+    grunt.loadNpmTasks('grunt-concurrent');
     grunt.loadNpmTasks('grunt-nodemon');
+    grunt.loadNpmTasks('grunt-contrib-watch');
+    grunt.loadNpmTasks('grunt-browserify');
 
-    grunt.registerTask('default', ['nodemon']);
+    grunt.registerTask('default', ['concurrent']);
 };
