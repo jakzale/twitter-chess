@@ -23,5 +23,8 @@
   "private": true,
   "dependencies": {
     "feathers": "~0.3.0"
+  },
+  "devDependencies": {
+    "grunt": "~0.4.2"
   }
 }
