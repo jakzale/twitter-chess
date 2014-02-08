@@ -20,5 +20,8 @@
     "url": "https://github.com/jakzale/twitter-chess/issues"
   },
   "homepage": "https://github.com/jakzale/twitter-chess",
-  "private": true
+  "private": true,
+  "dependencies": {
+    "feathers": "~0.3.0"
+  }
 }
