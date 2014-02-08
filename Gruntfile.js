@@ -45,14 +45,25 @@ module.exports = function(grunt) {
                     'public/bundle.js' : ['client/*.js']
                 }
             }
-        }
+        },
 
+        mochaTest: {
+            test: {
+                options: {
+                    reporter: 'spec',
+                    require: 'server.js'
+                },
+                src: ['test/mocha/**/*.js']
+            }
+        }
     });
 
     grunt.loadNpmTasks('grunt-concurrent');
     grunt.loadNpmTasks('grunt-nodemon');
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-browserify');
+    grunt.loadNpmTasks('grunt-mocha-test');
 
     grunt.registerTask('default', ['browserify', 'concurrent']);
+    grunt.registerTask('test', 'mochaTest');
 };
