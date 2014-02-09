@@ -26,11 +26,19 @@ var app = feathers();
 // Serving static files
 app.use(feathers.static(__dirname + '/public'));
 
+// Setting up the template engine to jade
+app.set('view engine', 'jade');
+
 // Use socket io
 app.configure(feathers.primus({ transformer: 'sockjs' }));
 
 // Use the todoService
 app.use('/game', move_service);
+
+// Render the index page
+app.get('/', function(req, res){
+    res.render('index');
+});
 
 // Start listening on port
 app.listen(8000);
