@@ -38,6 +38,17 @@ describe('Chess tests', function() {
         ['wr', 'wp', '', '', '', '', 'bp', 'br']
     ];
 
+    var bishop_board = [
+        ['wr', 'wp', '', '', '', '', 'bp', 'br'],
+        ['wn', 'wp', '', '', '', '', 'bp', 'bn'],
+        ['wb', 'wp', '', '', '', '', 'bp', 'bb'],
+        ['wq', '', '', '', '', '', 'bp', 'bq'],
+        ['wk', 'wp', '', '', '', '', 'bp', 'bk'],
+        ['wb', 'wp', '', '', '', '', 'bp', ''],
+        ['wn', 'wp', '', '', '', '', 'bp', 'bn'],
+        ['wr', 'wp', '', '', '', 'bb', 'bp', 'br']
+    ];
+
     describe('Valid moves tests', function() {
         it('should work for an empty start position', function() {
             var moves = chess.get_valid_moves(start_board, 3, 3);
@@ -116,6 +127,35 @@ describe('Chess tests', function() {
             black_moves.attacks.should.have.length(4);
 
             black_moves.protections.should.have.length(0);
+        });
+
+        it('should work for bishop', function() {
+            var white_moves = chess.get_valid_moves(bishop_board, 2, 0);
+            white_moves.moves.contains([3,1]).should.be.ok;
+            white_moves.moves.contains([4,2]).should.be.ok;
+            white_moves.moves.contains([5,3]).should.be.ok;
+            white_moves.moves.contains([6,4]).should.be.ok;
+            white_moves.moves.should.have.length(4);
+
+            white_moves.attacks.contains([7,5]).should.be.ok;
+            white_moves.attacks.should.have.length(1);
+
+            white_moves.protections.contains([1, 1]).should.be.ok;
+            white_moves.protections.should.have.length(1);
+
+            var black_moves = chess.get_valid_moves(bishop_board, 7, 5);
+            black_moves.moves.contains([3,1]).should.be.ok;
+            black_moves.moves.contains([4,2]).should.be.ok;
+            black_moves.moves.contains([5,3]).should.be.ok;
+            black_moves.moves.contains([6,4]).should.be.ok;
+            black_moves.moves.should.have.length(4);
+
+            black_moves.attacks.contains([2,0]).should.be.ok;
+            black_moves.attacks.should.have.length(1);
+
+            black_moves.protections.contains([6, 6]).should.be.ok;
+            black_moves.protections.should.have.length(1);
+
         });
     });
 });
