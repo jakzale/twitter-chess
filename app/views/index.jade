@@ -1,8 +1,16 @@
 doctype html
-html(lang="en")
+html(lang='en' ng-app)
     head
-        title="Twitter Chess"
+        title='Twitter Chess'
+        script(src='/lib/angular/angular.js')
+        link(rel='stylesheet', href='/lib/bootstrap/dist/css/bootstrap.css')
+
     body
         h1 Twitter Chess
 
-        Hello, welcome to my inn!
+        p.
+            Hello, welcome to my inn!
+
+        // Loading javascript code
+        script(src='/primus/primus.js')
+        script(src='/bundle.js')

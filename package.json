@@ -32,7 +32,8 @@
     "msgpack": "~0.2.1",
     "hiredis": "~0.1.16",
     "sockjs": "~0.3.8",
-    "primus": "~2.0.0"
+    "primus": "~2.0.0",
+    "jade": "~1.1.5"
   },
   "devDependencies": {
     "grunt": "~0.4.2",

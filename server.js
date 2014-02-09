@@ -28,6 +28,8 @@ app.use(feathers.static(__dirname + '/public'));
 
 // Setting up the template engine to jade
 app.set('view engine', 'jade');
+// Set up proper view directory
+app.set('views', __dirname + '/app/views');
 
 // Use socket io
 app.configure(feathers.primus({ transformer: 'sockjs' }));
