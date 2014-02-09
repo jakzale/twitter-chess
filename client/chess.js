@@ -94,7 +94,7 @@ function get_valid_moves(board, x, y, recurse_king) {
         opponent_color = 'w';
     }
 
-    var y_mult = board[x][y][0] === "w" ? 1 : -1;
+    var y_mult = color === "w" ? 1 : -1;
 
     function find_moves(possible_moves, push_to, attack) {
         _.each(possible_moves, function(move) {
@@ -118,7 +118,9 @@ function get_valid_moves(board, x, y, recurse_king) {
                                 valid.attacks.push([new_x, new_y]);
                         }
                     } else {
-                        valid.protections.push([new_x, new_y]);
+                        if ((figure === 'p' && attack) || figure !== 'p')
+                            valid.protections.push([new_x, new_y]);
+
                         break;
                     }
                 } else break;

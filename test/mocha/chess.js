@@ -16,6 +16,17 @@ describe('Chess tests', function() {
         ['wr', 'wp', '', '', '', '', 'bp', 'br']
     ];
 
+    var pawn_board = [
+        ['wr', '', 'wp', '', '', '', 'bp', 'br'],
+        ['wn', 'wp', '', '', '', '', 'bp', 'bn'],
+        ['wb', 'wp', 'bp', '', '', '', '', 'bb'],
+        ['wq', 'wp', '', '', '', '', 'bp', 'bq'],
+        ['wk', 'wp', '', '', '', '', 'bp', 'bk'],
+        ['wb', 'wp', '', '', '', '', 'bp', 'bb'],
+        ['wn', 'wp', '', '', '', '', 'bp', 'bn'],
+        ['wr', 'wp', '', '', '', '', 'bp', 'br']
+    ];
+
     describe('Valid moves tests', function() {
         it('should work for an empty start position', function() {
             var moves = chess.get_valid_moves(start_board, 3, 3);
@@ -55,5 +66,19 @@ describe('Chess tests', function() {
             moves.protections.contains([0, 1]).should.be.ok;
             moves.protections.contains([1, 0]).should.be.ok;
         });
+
+        it('should work for a simple pawn situation', function() {
+            var moves = chess.get_valid_moves(pawn_board, 1, 1);
+            moves.moves.contains([1,2]).should.be.ok;
+            moves.moves.contains([1,3]).should.be.ok;
+            moves.moves.should.have.length(2);
+
+            moves.protections.contains([0,2]).should.be.ok;
+            moves.protections.should.have.length(1);
+
+            moves.attacks.contains([2,2]).should.be.ok;
+            moves.attacks.should.have.length(1);
+        });
+
     });
 });
