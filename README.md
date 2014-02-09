@@ -13,12 +13,17 @@ Requirements
 ```
 npm install -g grunt-cli
 ```
+* Bower:
+```
+npm install -g bower
+```
 
 After Checkout
 --------------
 
 ```
 npm install
+bower install
 ```
 
 Usage
