@@ -79,11 +79,20 @@ var valid_moves = {
     }
 }
 
-function get_valid_moves(board, x, y) {
-    var valid   = {moves: [], attacks: []},
+function get_valid_moves(board, x, y, recurse_king) {
+    var valid   = {moves: [], attacks: [], protections: []},
         figure  = board[x][y].slice(1),
-        color   = board[x][y][0];
+        color   = board[x][y][0],
+        opponent_color;
+
     if (!figure) return valid;
+    if (recurse_king === undefined) recurse_king = true;
+
+    if (color === 'w') {
+        opponent_color = 'b';
+    } else {
+        opponent_color = 'w';
+    }
 
     var y_mult = board[x][y][0] === "w" ? 1 : -1;
 
@@ -100,12 +109,16 @@ function get_valid_moves(board, x, y) {
                     continue;
                 }
 
-                if (new_x < 8 && new_x > -1 && new_y > -1 && new_y < 8 &&
-                    color !== board[new_x][new_y][0]) {
-                    if (board[new_x][new_y][0] === undefined) {
-                        if (!attack) push_to.push([new_x, new_y]);
+                if (new_x < 8 && new_x > -1 && new_y > -1 && new_y < 8) {
+                    if (color !== board[new_x][new_y][0]) {
+                        if (board[new_x][new_y][0] === undefined) {
+                            if (!attack) push_to.push([new_x, new_y]);
+                        } else {
+                            valid.attacks.push([new_x, new_y]);
+                        }
                     } else {
-                        valid.attacks.push([new_x, new_y]);
+                        valid.protections.push([new_x, new_y]);
+                        break;
                     }
                 } else break;
 
@@ -120,6 +133,45 @@ function get_valid_moves(board, x, y) {
     if (_.contains(_.keys(valid_moves[figure]), 'attack')) {
         find_moves(valid_moves[figure].attack, valid.attacks, true);
     }
+
+
+    // If the figure is a king, check if the moves are
+    // not on an attacked field
+    if (figure == 'k' && recurse_king) {
+        // Get all fields attacked by the opponent
+        var attacked =
+            _.foldl(_.range(8), function(memo, x) {
+                _.each(_.range(8), function(y) {
+                    if (board[x][y][0] == opponent_color) {
+                        var moves = get_valid_moves(board, x, y, false);
+                        memo.push({x: x,
+                                   y: y,
+                                   moves: moves});
+                    }
+                });
+
+                return memo;
+        }, []);
+
+        var attacked_fields = _.uniq(_.foldl(attacked,
+            function(all_fields, figure) {
+                return all_fields + figure.protections + figure.moves;
+        }, []));
+
+        valid.moves = _.foldl(valid.moves, function(valid_moves, move) {
+            var is_valid = true;
+            _.each(attacked_fields, function(field) {
+                if (field === move) {
+                    is_valid = false;
+                    return false;
+                }
+            });
+
+            if (is_valid) valid_moves.push(move);
+            return valid_moves;
+        }, []);
+    }
+
 
     return valid;
 }
