@@ -27,6 +27,17 @@ describe('Chess tests', function() {
         ['wr', 'wp', '', '', '', '', 'bp', 'br']
     ];
 
+    var knight_board = [
+        ['wr', 'wp', '', '', '', '', 'bp', 'br'],
+        ['wn', 'wp', '', '', '', '', 'bp', ''],
+        ['wb', 'wp', 'bn', '', '', '', 'bp', 'bb'],
+        ['wq', 'wp', '', '', '', '', 'bp', 'bq'],
+        ['wk', 'wp', '', '', '', '', 'bp', 'bk'],
+        ['wb', 'wp', '', '', '', '', 'bp', 'bb'],
+        ['wn', 'wp', '', '', '', '', 'bp', 'bn'],
+        ['wr', 'wp', '', '', '', '', 'bp', 'br']
+    ];
+
     describe('Valid moves tests', function() {
         it('should work for an empty start position', function() {
             var moves = chess.get_valid_moves(start_board, 3, 3);
@@ -80,5 +91,31 @@ describe('Chess tests', function() {
             moves.attacks.should.have.length(1);
         });
 
+        it('should work for knight in a simple situation', function() {
+            var white_moves = chess.get_valid_moves(knight_board, 1, 0);
+            white_moves.moves.contains([0,2]).should.be.ok;
+            white_moves.moves.should.have.length(1);
+
+            white_moves.attacks.contains([2,2]).should.be.ok;
+            white_moves.attacks.should.have.length(1);
+
+            white_moves.protections.contains([3,1]).should.be.ok;
+            white_moves.protections.should.have.length(1);
+
+            var black_moves = chess.get_valid_moves(knight_board, 2, 2);
+            black_moves.moves.contains([0,3]).should.be.ok;
+            black_moves.moves.contains([1,4]).should.be.ok;
+            black_moves.moves.contains([3,4]).should.be.ok;
+            black_moves.moves.contains([4,3]).should.be.ok;
+            black_moves.moves.should.have.length(4);
+
+            black_moves.attacks.contains([0,1]).should.be.ok;
+            black_moves.attacks.contains([4,1]).should.be.ok;
+            black_moves.attacks.contains([1,0]).should.be.ok;
+            black_moves.attacks.contains([3,0]).should.be.ok;
+            black_moves.attacks.should.have.length(4);
+
+            black_moves.protections.should.have.length(0);
+        });
     });
 });
