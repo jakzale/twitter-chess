@@ -28,9 +28,9 @@ describe('Chess tests', function() {
                 _.each(_.range(8), function(x) {
                     var moves = chess.get_valid_moves(start_board, x, y);
                     if (y === 1) {
-                        moves.moves.should.eql([[x, 2]]);
+                        moves.moves.should.eql([[x, 2], [x, 3]]);
                     } else {
-                        moves.moves.should.eql([[x, 5]]);
+                        moves.moves.should.eql([[x, 5], [x, 4]]);
                     }
 
                     moves.attacks.should.have.length(0);

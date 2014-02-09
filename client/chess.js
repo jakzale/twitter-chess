@@ -73,15 +73,16 @@ var valid_moves = {
         max_mult: 8
     },
     p: {
-        moves: [[0, 1]],
+        moves: [[0, 1], [0, 2]],
         attack: [[-1, 1], [1, 1]],
         max_mult: 1
     }
 }
 
 function get_valid_moves(board, x, y) {
-    var valid = {moves: [], attacks: []};
-    var figure = board[x][y].slice(1);
+    var valid   = {moves: [], attacks: []},
+        figure  = board[x][y].slice(1),
+        color   = board[x][y][0];
     if (!figure) return valid;
 
     var y_mult = board[x][y][0] === "w" ? 1 : -1;
@@ -93,8 +94,14 @@ function get_valid_moves(board, x, y) {
                 var new_x = move[0] * i + x,
                     new_y = move[1] * i * y_mult + y;
 
+                // For a double pawn move
+                if (figure === 'p' && !((y === 1 && color === 'w') ||
+                                       (y === 6 && color === 'b'))) {
+                    continue;
+                }
+
                 if (new_x < 8 && new_x > -1 && new_y > -1 && new_y < 8 &&
-                    board[x][y][0] !== board[new_x][new_y][0]) {
+                    color !== board[new_x][new_y][0]) {
                     if (board[new_x][new_y][0] === undefined) {
                         if (!attack) push_to.push([new_x, new_y]);
                     } else {
