@@ -1,4 +1,5 @@
 var chess   = require('../../client/chess');
+var libs    = require('../../client/libs');
 var should  = require('should');
 var _ = require('underscore');
 
@@ -47,6 +48,13 @@ describe('Chess tests', function() {
                     moves.moves.should.have.length(0);
                 });
             });
+        });
+
+        it('should provide protections', function() {
+            var moves = chess.get_valid_moves(start_board, 0, 0);
+
+            moves.protections.contains([0, 1]).should.be.ok;
+            moves.protections.contains([1, 0]).should.be.ok;
         });
     });
 });

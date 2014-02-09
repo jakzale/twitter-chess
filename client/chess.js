@@ -114,7 +114,8 @@ function get_valid_moves(board, x, y, recurse_king) {
                         if (board[new_x][new_y][0] === undefined) {
                             if (!attack) push_to.push([new_x, new_y]);
                         } else {
-                            valid.attacks.push([new_x, new_y]);
+                            if ((figure === 'p' && attack) || figure !== 'p')
+                                valid.attacks.push([new_x, new_y]);
                         }
                     } else {
                         valid.protections.push([new_x, new_y]);
