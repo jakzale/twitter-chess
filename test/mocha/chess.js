@@ -131,6 +131,7 @@ describe('Chess tests', function() {
 
         it('should work for bishop', function() {
             var white_moves = chess.get_valid_moves(bishop_board, 2, 0);
+            console.log(white_moves);
             white_moves.moves.contains([3,1]).should.be.ok;
             white_moves.moves.contains([4,2]).should.be.ok;
             white_moves.moves.contains([5,3]).should.be.ok;

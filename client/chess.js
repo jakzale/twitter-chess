@@ -98,7 +98,9 @@ function get_valid_moves(board, x, y, recurse_king) {
 
     function find_moves(possible_moves, push_to, attack) {
         _.each(possible_moves, function(move) {
-            for (var iter in _.range(valid_moves[figure].max_mult)) {
+
+            // _.every is a breakable _.each
+            _.every(_.range(valid_moves[figure].max_mult), function(iter) {
                 var i = parseInt(iter) + 1;
                 var new_x = move[0] * i + x,
                     new_y = move[1] * i * y_mult + y;
@@ -106,7 +108,7 @@ function get_valid_moves(board, x, y, recurse_king) {
                 // For a double pawn move
                 if (figure === 'p' && !((y === 1 && color === 'w') ||
                                        (y === 6 && color === 'b'))) {
-                    continue;
+                    return true;
                 }
 
                 if (new_x < 8 && new_x > -1 && new_y > -1 && new_y < 8) {
@@ -121,11 +123,12 @@ function get_valid_moves(board, x, y, recurse_king) {
                         if ((figure === 'p' && attack) || figure !== 'p')
                             valid.protections.push([new_x, new_y]);
 
-                        break;
+                        return false;
                     }
-                } else break;
+                } else return false;
 
-            }
+                return true;
+            });
         });
     }
 
@@ -163,11 +166,11 @@ function get_valid_moves(board, x, y, recurse_king) {
 
         valid.moves = _.foldl(valid.moves, function(valid_moves, move) {
             var is_valid = true;
-            _.each(attacked_fields, function(field) {
+            _.every(attacked_fields, function(field) {
                 if (field === move) {
                     is_valid = false;
                     return false;
-                }
+                } else return true;
             });
 
             if (is_valid) valid_moves.push(move);
