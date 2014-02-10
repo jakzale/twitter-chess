@@ -144,15 +144,13 @@ function get_valid_moves(board, x, y, recurse_king) {
     // If the figure is a king, check if the moves are
     // not on an attacked field
     if (figure == 'k' && recurse_king) {
-        // Get all fields attacked by the opponent
+        // Get all fields attacked by the opponent,
         var attacked =
             _.foldl(_.range(8), function(memo, x) {
                 _.each(_.range(8), function(y) {
                     if (board[x][y][0] == opponent_color) {
                         var moves = get_valid_moves(board, x, y, false);
-                        memo.push({x: x,
-                                   y: y,
-                                   moves: moves});
+                        return memo + moves;
                     }
                 });
 
