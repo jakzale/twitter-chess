@@ -1,4 +1,5 @@
-var _ = require('underscore');
+var _       = require('underscore'),
+    libs    = require('./libs');
 
 function update_trees(moves, trees) {
     // tree: { index_cache: {}, tree: []}
@@ -46,6 +47,16 @@ function update_trees(moves, trees) {
 
         return trees;
     }, trees);
+}
+
+// Propagate the board
+function move(board, x, y, end_x, end_y) {
+    var clone   = JSON.parse(JSON.stringify(board)),
+        figure  = board[x][y];
+
+    clone[x][y] = '';
+    clone[end_x][end_y] = figure;
+    return clone;
 }
 
 var valid_moves = {
@@ -120,15 +131,14 @@ function find_moves(board, x, y, possible_moves, figure_moves,
     });
 }
 
-
-function get_valid_moves(board, x, y, figure_moves, recurse_king) {
+function get_valid_moves(board, x, y, figure_moves, recurse) {
     var valid   = {moves: [], attacks: [], protections: []},
         figure  = board[x][y].slice(1),
         color   = board[x][y][0],
         opponent_color;
 
     if (!figure) return valid;
-    if (recurse_king === undefined) recurse_king = true;
+    if (recurse === undefined) recurse = true;
     if (figure_moves === undefined) figure_moves = valid_moves;
 
     if (color === 'w') {
@@ -150,7 +160,7 @@ function get_valid_moves(board, x, y, figure_moves, recurse_king) {
 
     // If the figure is a king, check if the moves are
     // not on an attacked field
-    if (figure == 'k' && recurse_king) {
+    if (figure === 'k' && recurse) {
         valid.moves = _.foldl(valid.moves, function(valid_moves, move) {
             if (get_checks(board, move[0], move[1]).length === 0)
                 valid_moves.push(move);
@@ -158,12 +168,43 @@ function get_valid_moves(board, x, y, figure_moves, recurse_king) {
         }, []);
     }
 
+    // If there are checks on a king, and the figure is not a king,
+    // only moves stopping the check are possible
+
+    if (figure !== 'k' && figure !== undefined && recurse) {
+        var checks = _.filter(get_checks(board, undefined, undefined, recurse),
+                              function(check) {
+            if (board[check.checked.x][check.checked.y][0] === color)
+                return true;
+            return false;
+        });
+
+        if (checks.length === 0) return valid;
+
+        var attacks = [],
+            moves   = [];
+
+        _.each(checks, function(check) {
+            attacks.push(_.filter(valid.attacks, function(move) {
+                return mitigate_by_move(board, check, x, y, move[0], move[1]);
+            }));
+
+            moves.push(_.filter(valid.moves, function(move) {
+                return mitigate_by_move(board, check, x, y, move[0], move[1]);
+            }));
+        });
+
+        valid.moves = _.uniq(moves, false, libs.stringify);
+        valid.attacks = _.uniq(attacks, false, libs.stringify);
+    }
+
     return valid;
 }
 
 // Check if there is a check on the board
-function get_checks(board, x, y) {
+function get_checks(board, x, y, recurse) {
     var checks = [];
+    if (recurse === undefined) recurse = true;
 
     _.each(_.range(8), function(x) {
         _.each(_.range(8), function(y) {
@@ -171,9 +212,9 @@ function get_checks(board, x, y) {
                 color   = board[x][y][0];
 
             if (color === undefined) return;
-            var moves = get_valid_moves(board, x, y);
+            var moves = get_valid_moves(board, x, y, valid_moves, false);
 
-            _.each(moves.attacks + moves.moves, function(move) {
+            _.each(libs.join_arrs(moves.attacks, moves.moves), function(move) {
                 if ((board[move[0]][move[1]][1] === 'k'
                      && x === undefined && y === undefined) ||
                     (move[0] === x && move[1] === y))
@@ -189,6 +230,61 @@ function get_checks(board, x, y) {
 
     return checks;
 }
+
+function mitigate_by_move(board, check, start_x, start_x,
+                          end_x, end_y)
+{
+
+    var k_x     = check.checked.x,
+        k_y     = check.checked.y,
+        a_x     = check.attacker.x,
+        a_y     = check.attacker.y,
+        k_color = board[k_x][k_y][0],
+        a_color = board[a_x][a_y][0];
+
+    // If the figure can beat the attacker
+    if (end_x === a_x && end_y === a_y) return true;
+
+    var new_board = move(board, start_x, start_y, end_x, end_y);
+    var this_check = _.filter(get_checks(new_board),
+                              function(check) {
+        if (check.attacker.x === a_x &&
+            check.attacker.y === a_y &&
+            check.checked.x === k_x &&
+            check.checked.y === k_y)
+            return true;
+        return false;
+    });
+
+    if (this.check.length === 0) return true;
+    return false;
+}
+
+
+// If true, the check can be mitigated
+function can_mitigate(board, check) {
+    var k_x     = check.checked.x,
+        k_y     = check.checked.y,
+        a_x     = check.attacker.x,
+        a_y     = check.attacker.y,
+        k_color = board[k_x][k_y][0],
+        a_color = board[a_x][a_y][0];
+
+    return !_.every(_.range(8), function(x) {
+        return _.every(_.range(8), function(y) {
+            if ((x === k_x && y === k_y) ||
+                board[x][y][0] !== board[k_x][k_y][0]) {
+                return true;
+            }
+
+            var figure_moves = get_valid_moves(board, x, y);
+            figure_moves = _.filter(figure_moves, function(move) {
+                return mitigate_by_move(board, check, x, y, move[0], move[1]);
+            });
+        });
+    });
+}
+
 
 // If true, the checkmate occured
 function is_checkmate(board, current_color) {
@@ -215,51 +311,8 @@ function is_checkmate(board, current_color) {
     var king_moves = get_valid_moves(board, k_x, k_y);
     if (king_moves.length > 0) return false;
 
-    // If the attacker can be mitigated,
-    // there is no checkmate
-    return _.every(_.checks, function(check) {
-        var attacker_moves  = get_valid_moves(board, check.attacker.x,
-                                                     check.attacker.y),
-            a_x             = check.attacker.x,
-            a_y             = check.attacker.y;
-
-        return _.every(_.range(8), function(x) {
-            return _.every(_.range(8), function(y) {
-                // Only pieces of the same color as the king can
-                // protect it, apart from the king itself
-                if ((x === k_x && y === k_y) ||
-                    board[x][y][0] !== board[k_x][k_y][0]) {
-                    return true;
-                }
-
-                var figure_moves = get_valid_moves(board, x, y);
-
-                // If the figure can beat the attacker
-                var attacker_beaten =
-                    _.every(figure_moves.attacks, function(move) {
-                        if (move[0] === a_x && move[1] === a_y)
-                            return false;
-                        return true;
-                });
-
-                if (attacker_beaten) return false;
-
-                // If the figure can shield the king
-                // from the attacker with itself
-                var not_shielded =
-                    _.every(attacker_moves.moves, function(att_move) {
-                        return _.every(figure_moves.moves, function(fig_move) {
-                            if (fig_move[0] === att_move[0] &&
-                                fig_move[1] === att_move[1])
-                                return false;
-                            return true;
-                        });
-                });
-                if (not_shielded) return false;
-                return true;
-            });
-        });
-    });
+    // If the attacker can be mitigated, there is no checkmate
+    return !_.every(_.checks, _.partial(can_mitigate, board));
 }
 
 
@@ -279,9 +332,6 @@ function validate_gamestep(start_board, end_board, current_color) {
         });
     });
 }
-
-
-
 
 
 module.exports = {

@@ -1,3 +1,5 @@
+var _ = require('underscore');
+
 // attach the .compare method to Array's prototype to call it on any array
 Array.prototype.compare = function (array) {
     // if the other array is a falsy value, return
@@ -37,4 +39,22 @@ Array.prototype.contains = function (element) {
     }
 
     return false;
+}
+
+function stringify(item)
+{
+    return JSON.stringify(item);
+}
+
+function join_arrs()
+{
+    return _.foldl(arguments, function(memo, arr) {
+        memo.push.apply(memo, arr);
+        return memo;
+    }, []);
+}
+
+module.exports = {
+    stringify: stringify,
+    join_arrs: join_arrs
 }

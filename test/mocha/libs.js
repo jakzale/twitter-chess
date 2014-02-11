@@ -20,4 +20,3 @@ describe('Libs tests', function() {
         });
     });
 });
-

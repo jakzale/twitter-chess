@@ -49,6 +49,17 @@ describe('Chess tests', function() {
         ['wr', 'wp', '', '', '', 'bb', 'bp', 'br']
     ];
 
+    var king_board = [
+        ['wr', 'wp', '', '', '', '', 'bp', ''],
+        ['wn', 'wp', '', '', '', '', 'bp', 'bn'],
+        ['wb', 'wp', '', '', '', 'br', 'bp', 'bb'],
+        ['wq', 'wp', '', 'wk', '', '', 'bp', 'bq'],
+        ['', 'wp', '', '', '', '', 'bp', 'bk'],
+        ['wb', 'wp', '', '', '', '', 'bp', 'bb'],
+        ['wn', 'wp', '', '', '', '', 'bp', 'bn'],
+        ['wr', 'wp', '', '', '', '', 'bp', 'br']
+    ];
+
     describe('Valid moves tests', function() {
         it('should work for an empty start position', function() {
             var moves = chess.get_valid_moves(start_board, 3, 3);
